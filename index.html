@@ -1,6 +1,10 @@
 <html>
   <head>
     <title>Todo List</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
   </head>
   <body>
     <!-- 2カラムデザイン -->
@@ -50,14 +54,17 @@
     display: flex;
     flex-wrap: wrap;
   }
-  .col-md-6 {
-    width: 50%;
-  }
 
   /* レスポンシブ */
   @media screen and (max-width: 768px) {
     .col-md-6 {
       width: 100%;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .col-md-6 {
+      width: 50%;
     }
   }
 
@@ -78,7 +85,7 @@
 
   /* todo-listの高さ */
   #todo-list {
-    height: 30px;
+    min-height: 30px;
   }
 </style>
 
