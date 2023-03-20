@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Copilot Todo List</title>
+    <title>Todo List</title>
   </head>
   <body>
     <!-- 2カラムデザイン -->
@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-6">
           <h2>Input</h2>
-          <input type="text" id="todo" />
+          <input type="text" id="todo" placeholder="タスク" />
           <button onclick="addTodo()">Add</button>
           <button onclick="clearTodo()">Clear</button>
           <h2>Save</h2>
@@ -102,6 +102,7 @@
 
     // 空文字の場合は追加しない
     if (todo.value == "") {
+      alert("タスクを入力してください。");
       return;
     }
 
@@ -190,7 +191,12 @@
     var todoList = document.getElementById("todo-list");
     var todoItems = [];
     for (var i = 0; i < todoList.children.length; i++) {
-      todoItems.push(todoList.children[i].innerHTML);
+      todoItems.push(
+        todoList.children[i].innerHTML
+          .replace(/<button.*<\/button>/, "")
+          .replace(/<span>/, "")
+          .replace(/<\/span>/, "")
+      );
     }
 
     var csv = todoItems.join("\n");
@@ -198,8 +204,10 @@
     var url = window.URL || window.webkitURL;
     var blobURL = url.createObjectURL(blob);
     var a = document.createElement("a");
-    // タイムスタンプの変数
-    var timestamp = new Date().getTime();
+    // 日本のタイムスタンプの変数
+    var timestamp = new Date().toLocaleString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
     // タイムスタンプをファイル名に追加
     a.download = "todo_" + timestamp + ".csv";
 
@@ -217,7 +225,20 @@
       var todoItems = reader.result.split("\n");
       for (var i = 0; i < todoItems.length; i++) {
         var li = document.createElement("li");
-        li.innerHTML = todoItems[i];
+        // taskのテキストを追加
+        const liText = document.createElement("span");
+        liText.textContent = todoItems[i]
+          .replace(/<button.*<\/button>/, "")
+          .replace(/<span>/, "")
+          .replace(/<\/span>/, "");
+        li.appendChild(liText);
+
+        // taskの削除ボタンを追加
+        const liButton = document.createElement("button");
+        liButton.textContent = "x";
+        liButton.onclick = removeButtonAction;
+        li.appendChild(liButton);
+
         todoList.appendChild(li);
       }
       // アイテムを保存する
